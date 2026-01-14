@@ -85,40 +85,103 @@ const GameController = (function() {
         if(gameOver) {
             return;
         }
-        
+
         const moveSuccessfull = Gameboard.placeMarker(index, getActivePlayer().marker);
 
-        if(!moveSuccessfull) {
-            console.log("This spot is already taken! Please choose another");
-            return;
+        if(moveSuccessfull) {
+           
+            if(checkWin(Gameboard.getBoard())) {
+                DisplayController.updateBoard();
+                DisplayController.setResult(`${activePlayer.name} Wins!`);
+                gameOver = true;
+                return;
+            }
+
+            if(checkTie(Gameboard.getBoard())) {
+                DisplayController.updateBoard();
+                DisplayController.setResult("It's a Tie!");
+                gameOver = true;
+                return;
+            }
+
+            switchPlayerTurn();
+            DisplayController.updateBoard();
+            DisplayController.setMessage(`${activePlayer.name}'s turn (${activePlayer.marker})`);
         }
-
-        const board = Gameboard.getBoard();
-
-        if(checkWin(board)) {
-            Gameboard.printBoard();
-            console.log(`Winner: ${getActivePlayer().name} !`);
-            return;
-        }
-
-        if(checkTie(board)) {
-            Gameboard.printBoard();
-            console.log("Its a tie!");
-            return;
-        }
-
-        switchPlayerTurn();
-        printNewRound();
     };
 
-    printNewRound();
+    const restartGame = () => {
+        Gameboard.resetBoard();
+        activePlayer = players[0];
+        gameOver = false;
+        DisplayController.setMessage(`${activePlayer.name}'s turn (${activePlayer.marker})`);
+    };
 
-    return {playRound, getActivePlayer};
+    return {playRound, getActivePlayer, restartGame, setPlayerNames};
 
 })();
 
-GameController.playRound(0);
-GameController.playRound(4);
-GameController.playRound(1);
-GameController.playRound(7);
-GameController.playRound(2);
+const DisplayController = (function() {
+
+    const boardDiv = document.getElementById("game-board");
+    const statusMsg = document.getElementById("status-message");
+    const restartBtn = document.getElementById("restart-btn");
+
+    const setupScreen = document.getElementById("setup-screen");
+    const gameScreen = document.getElementById("game-screen");
+    const startBtn = document.getElementById("start-btn");
+
+    const p1Input = document.getElementById("player1-name");
+    const p2Input = document.getElementById("player2-name");
+
+    const updateBoard = () => {
+        boardDiv.innerHTML = "";
+
+        const board = Gameboard.getBoard();
+
+        board.forEach( (cell, index) => {
+
+            const cellBtn = document.createElement("div");
+            cellBtn.classList.add("cell");
+
+            if(cell === "X") {
+                cellBtn.classList.add("x");
+            }
+            
+            if(cell === "O") {
+                cellBtn.classList.add("o");
+            }
+
+            cellBtn.textContent = cell;
+
+            cellBtn.addEventListener("click", () => GameController.playRound(index));
+
+            boardDiv.appendChild(cellBtn);
+        });
+    };
+
+    const setMessage = (msg) => statusMsg.textContent = msg;
+    const setResult = (msg) => {
+        statusMsg.textContent = msg;
+        statusMsg.style.color = "#e74c3c";
+    };
+
+    startBtn.addEventListener("click", () => {
+
+        GameController.setPlayerNames(p1Input.value, p2Input.value);
+
+        setupScreen.classList.add("hidden");
+        gameScreen.classList.remove("hidden");
+
+        GameController.restartGame();
+    });
+
+    restartBtn.addEventListener("click", () => {
+
+        GameController.restartGame();
+        statusMsg.style.color = "#555";
+    });
+
+    return { updateBoard, setMessage, setResult};
+
+})();
