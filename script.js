@@ -114,6 +114,7 @@ const GameController = (function() {
         Gameboard.resetBoard();
         activePlayer = players[0];
         gameOver = false;
+        DisplayController.updateBoard();
         DisplayController.setMessage(`${activePlayer.name}'s turn (${activePlayer.marker})`);
     };
 

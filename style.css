@@ -66,6 +66,39 @@ input[type="text"]:focus {
     display: none !important;
 }
 
+.game-status {
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    min-height: 1.5em;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    width: 100%;
+}
+
+.cell {
+    background-color: #e9ecef;
+    aspect-ratio: 1 / 1;
+
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: clamp(2rem, 10vh, 3rem);
+
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    user-select: none;
+}
+
+
+
 .btn {
     padding: 12px 20px;
     font-size: 1rem;
