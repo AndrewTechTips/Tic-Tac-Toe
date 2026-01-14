@@ -15,20 +15,13 @@ const Gameboard = (function() {
         return false;
     };
 
-    const printBoard = () => {
-        console.log("Current Board:");
-        console.log(board[0] + " | " + board[1] + " | " + board[2]);
-        console.log(board[3] + " | " + board[4] + " | " + board[5]);
-        console.log(board[6] + " | " + board[7] + " | " + board[8]);
-    };
-
     const resetBoard = () => {
         for(let i = 0; i < 9; i++) {
             board[i] = "";
         }
     }
 
-    return {getBoard, placeMarker, printBoard, resetBoard};
+    return {getBoard, placeMarker, resetBoard};
 
 })();
 
@@ -42,23 +35,24 @@ const Player = (name, marker) => {
 
 const GameController = (function() {
 
-    const players = [
+    let players = [
         Player("Player One", "X"),
         Player("Player Two", "O")
     ];
 
     let activePlayer = players[0];
+    let gameOver = false;
+
+    const setPlayerNames = (name1, name2) => {
+        players[0].name = name1 === "" ? "Player One" : name1;
+        players[1].name = name2 === "" ? "Player Two" : name2;
+    };
 
     const switchPlayerTurn = () => {
         activePlayer = activePlayer === players[0] ? players[1] : players[0];
     };
 
     const getActivePlayer = () => activePlayer;
-
-    const printNewRound = () => {
-        Gameboard.printBoard();
-        console.log(`${getActivePlayer().name}'s turn (${getActivePlayer().marker}).`);
-    };
 
     const checkWin = (board) => {
 
@@ -88,8 +82,10 @@ const GameController = (function() {
 
     const playRound = (index) => {
 
-        console.log(`Placing ${getActivePlayer().marker} into square ${index} ...`);
-
+        if(gameOver) {
+            return;
+        }
+        
         const moveSuccessfull = Gameboard.placeMarker(index, getActivePlayer().marker);
 
         if(!moveSuccessfull) {
