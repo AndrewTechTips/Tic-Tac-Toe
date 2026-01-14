@@ -120,3 +120,9 @@ const GameController = (function() {
     return {playRound, getActivePlayer};
 
 })();
+
+GameController.playRound(0);
+GameController.playRound(4);
+GameController.playRound(1);
+GameController.playRound(7);
+GameController.playRound(2);
