@@ -6,12 +6,39 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Tic Tac Toe</title>
 
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+
         <link rel="stylesheet" href="style.css">
         <script src="script.js" defer></script>
     </head>
 
     <body>
-        
+
+        <div class="main-container">
+
+            <header>
+                <h1>Tic Tac Toe</h1>
+            </header>
+
+            <main>
+
+                <div id="#setup-screen" class="setup">
+                    <h2>Enter Player Names</h2>
+                    <div class="input-group">
+                        <input type="text" id="player1-name" placeholder="Player 1 (X)" maxlength="10">
+                        <input type="text" id="player2-name" placeholder="Player 2 (O)" maxlength="10">
+                    </div>
+                    <button id="start-btn" class="btn start-btn">Start Game</button>
+                </div>
+
+                
+                
+            </main>
+
+        </div>
+
     </body>
     
 </html>
