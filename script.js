@@ -2,7 +2,7 @@
 
 const Gameboard = (function() {
 
-    const board = ["", "", "", "", "", "", "", "", ""];
+    let board = ["", "", "", "", "", "", "", "", ""];
 
     const getBoard = () => board;
 
@@ -15,11 +15,7 @@ const Gameboard = (function() {
         return false;
     };
 
-    const resetBoard = () => {
-        for(let i = 0; i < 9; i++) {
-            board[i] = "";
-        }
-    }
+    const resetBoard = () => board.fill("");
 
     return {getBoard, placeMarker, resetBoard};
 
@@ -86,27 +82,19 @@ const GameController = (function() {
             return;
         }
 
-        const moveSuccessfull = Gameboard.placeMarker(index, getActivePlayer().marker);
+        if(Gameboard.placeMarker(index, activePlayer.marker)) {
+            DisplayController.updateBoard();
 
-        if(moveSuccessfull) {
-           
             if(checkWin(Gameboard.getBoard())) {
-                DisplayController.updateBoard();
                 DisplayController.setResult(`${activePlayer.name} Wins!`);
                 gameOver = true;
-                return;
-            }
-
-            if(checkTie(Gameboard.getBoard())) {
-                DisplayController.updateBoard();
+            } else if(checkTie(Gameboard.getBoard())) {
                 DisplayController.setResult("It's a Tie!");
                 gameOver = true;
-                return;
+            } else {
+                switchPlayerTurn();
+                DisplayController.setMessage(`${activePlayer.name}'s Turn`);
             }
-
-            switchPlayerTurn();
-            DisplayController.updateBoard();
-            DisplayController.setMessage(`${activePlayer.name}'s turn (${activePlayer.marker})`);
         }
     };
 
@@ -115,7 +103,7 @@ const GameController = (function() {
         activePlayer = players[0];
         gameOver = false;
         DisplayController.updateBoard();
-        DisplayController.setMessage(`${activePlayer.name}'s turn (${activePlayer.marker})`);
+        DisplayController.setMessage(`${activePlayer.name}'s Turn`);
     };
 
     return {playRound, getActivePlayer, restartGame, setPlayerNames};
@@ -126,11 +114,13 @@ const DisplayController = (function() {
 
     const boardDiv = document.getElementById("game-board");
     const statusMsg = document.getElementById("status-message");
-    const restartBtn = document.getElementById("restart-btn");
 
     const setupScreen = document.getElementById("setup-screen");
     const gameScreen = document.getElementById("game-screen");
+
     const startBtn = document.getElementById("start-btn");
+    const restartBtn = document.getElementById("restart-btn");
+    const backBtn = document.getElementById("back-btn");
 
     const p1Input = document.getElementById("player1-name");
     const p2Input = document.getElementById("player2-name");
@@ -161,10 +151,14 @@ const DisplayController = (function() {
         });
     };
 
-    const setMessage = (msg) => statusMsg.textContent = msg;
-    const setResult = (msg) => {
+    const setMessage = (msg) => {
         statusMsg.textContent = msg;
-        statusMsg.style.color = "#e74c3c";
+        statusMsg.style.color = "#444";
+    };
+    
+        const setResult = (msg) => {
+        statusMsg.textContent = msg;
+        statusMsg.style.color = "#764ba2";
     };
 
     startBtn.addEventListener("click", () => {
@@ -177,11 +171,13 @@ const DisplayController = (function() {
         GameController.restartGame();
     });
 
-    restartBtn.addEventListener("click", () => {
+    restartBtn.addEventListener("click", () => GameController.restartGame());
 
-        GameController.restartGame();
-        statusMsg.style.color = "#555";
-    });
+    backBtn.addEventListener("click", () => {
+        gameScreen.classList.add("hidden");
+        setupScreen.classList.remove("hidden");
+        GameController.restartGame()
+    })
 
     return { updateBoard, setMessage, setResult};
 
