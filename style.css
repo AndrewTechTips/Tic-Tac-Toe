@@ -97,7 +97,17 @@ input[type="text"]:focus {
     user-select: none;
 }
 
+.cell:active {
+    transform: scale(0.95);
+}
 
+.cell.x {
+    color:#e74c3c;
+}
+
+.cell.o {
+    color: #3498db;
+}
 
 .btn {
     padding: 12px 20px;

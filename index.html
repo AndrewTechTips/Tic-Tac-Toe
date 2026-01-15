@@ -25,7 +25,7 @@
             <main>
 
                 <div id="setup-screen" class="setup">
-                    <h2>Enter Player Names</h2>
+                    <h2>Who is playing ?</h2>
                     <div class="input-group">
                         <input type="text" id="player1-name" placeholder="Player 1 (X)" maxlength="10">
                         <input type="text" id="player2-name" placeholder="Player 2 (O)" maxlength="10">
@@ -34,13 +34,17 @@
                 </div>
 
                 <div id="game-screen" class="game-container hidden">
-                    <div class="game-status">
-                        <p id="status-message">Ready?</p>
+                    <div class="game-info">
+                        <p id="status-message">Player One's Turn</p>
                     </div>
 
                     <div id="game-board" class="board"></div>
 
-                    <button id="restart-btn" class="btn">New Game</button>
+                    <div class="controls">
+                        <button id="restart-btn" class="btn secondary-btn">Restart Round</button>
+                        <button id="back-btn" class="btn text-btn">Change Players</button>
+                    </div>
+
                 </div>
             
             </main>
